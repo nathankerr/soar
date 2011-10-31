@@ -27,7 +27,7 @@ func process() {
 func RootServer(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "<html><head><title>Asset List</title></head><body>")
 
-	asset_consumer, err := soar.NewConsumer(":1233", ":1234")
+	asset_consumer, err := soar.NewConsumer(":1234")
 	if err != nil {
 		panic(err)
 	}
