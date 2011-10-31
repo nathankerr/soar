@@ -10,11 +10,8 @@ type Server struct {
 	listener net.Listener
 }
 
-func NewServer(addr string) (*Server, os.Error) {
-	server := new(Server)
-	var err os.Error
-
-	server.addr = addr
+func NewServer(addr string) (server *Server, err os.Error) {
+	server = &Server{ addr: addr }
 
 	server.listener, err = net.Listen("tcp", server.addr)
 	if err != nil {

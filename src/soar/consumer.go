@@ -10,11 +10,8 @@ type Consumer struct {
 	connection net.Conn
 }
 
-func NewConsumer(addr string) (*Consumer, os.Error) {
-	consumer := new(Consumer)
-	var err os.Error
-
-	consumer.addr = addr
+func NewConsumer(addr string) (consumer *Consumer, err os.Error) {
+	consumer = &Consumer{ addr: addr }
 
 	consumer.connection, err = net.Dial("tcp", consumer.addr)
 	if err != nil {
