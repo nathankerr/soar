@@ -1,6 +1,7 @@
 package soar
 
 import (
+	"jsoncoder"
 	"net"
 	"os"
 )
@@ -8,10 +9,18 @@ import (
 type Server struct {
 	addr string
 	listener net.Listener
+	coder Coder
 }
 
-func NewServer(addr string) (server *Server, err os.Error) {
-	server = &Server{ addr: addr }
+func NewServer(addr string) (*Server, os.Error) {
+	coder := jsoncoder.NewCoder()
+	return NewServerWithCoder(addr, coder)
+}
+
+func NewServerWithCoder(addr string, coder Coder) (server *Server, err os.Error) {
+	server = &Server{ addr: addr,
+		coder: coder,
+	}
 
 	server.listener, err = net.Listen("tcp", server.addr)
 	if err != nil {
@@ -31,12 +40,12 @@ func (server *Server) Serve() os.Error {
 		if err != nil {
 			return err
 		}
+		server.coder.SetReadWriter(c)
 
-		buf := make([]byte, 1024)
-		n, err := c.Read(buf)
-		println(n, string(buf))
+		var msg string
+		server.coder.Decode(&msg)
 
-		c.Write([]byte("pong"))
+		server.coder.Encode("pong")
 
 		c.Close()
 	}

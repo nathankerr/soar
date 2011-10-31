@@ -1,6 +1,7 @@
 package soar
 
 import (
+	"jsoncoder"
 	"net"
 	"os"
 )
@@ -8,15 +9,25 @@ import (
 type Consumer struct {
 	addr string
 	connection net.Conn
+	coder Coder
 }
 
-func NewConsumer(addr string) (consumer *Consumer, err os.Error) {
-	consumer = &Consumer{ addr: addr }
+func NewConsumer(addr string) (*Consumer, os.Error) {
+	coder := jsoncoder.NewCoder()
+	return NewConsumerWithCoder(addr, coder)
+}
+
+func NewConsumerWithCoder(addr string, coder Coder) (consumer *Consumer, err os.Error) {
+	consumer = &Consumer{ addr: addr,
+		coder: coder,
+	}
 
 	consumer.connection, err = net.Dial("tcp", consumer.addr)
 	if err != nil {
 		return nil, err
 	}
+
+	consumer.coder.SetReadWriter(consumer.connection)
 	
 	return consumer, nil
 }
@@ -26,17 +37,10 @@ func (consumer *Consumer) Close() {
 }
 
 func (consumer *Consumer) Invoke (method string, args interface{}) (interface{}, os.Error) {
+	consumer.coder.Encode("ping")
 
-	_, err := consumer.connection.Write([]byte("ping"))
-	if err != nil {
-		return nil, err
-	}
+	var msg string
+	consumer.coder.Decode(&msg)
 
-	buf := make([]byte, 1024)
-	_, err = consumer.connection.Read(buf)
-	if err != nil {
-		return nil, err
-	}
-
-	return string(buf), nil
+	return msg, nil
 }

@@ -1,5 +1,6 @@
 *.8
 *.6
+_obj
 bin
 pkg
 Makefile
