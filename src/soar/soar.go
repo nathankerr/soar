@@ -10,3 +10,8 @@ type Coder interface {
 	Encode(v interface{}) os.Error
 	Decode(v interface{}) os.Error
 }
+
+type InvocationMessage struct {
+	Capability string
+	Args []interface{}
+}

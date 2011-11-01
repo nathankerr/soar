@@ -36,8 +36,11 @@ func (consumer *Consumer) Close() {
 	consumer.connection.Close()
 }
 
-func (consumer *Consumer) Invoke (method string, args interface{}) (interface{}, os.Error) {
-	consumer.coder.Encode("ping")
+func (consumer *Consumer) Invoke (capability string, args ...interface{}) (interface{}, os.Error) {
+	invocation := &InvocationMessage{ Capability: capability,
+		Args: args,
+	}
+	consumer.coder.Encode(invocation)
 
 	var msg string
 	consumer.coder.Decode(&msg)

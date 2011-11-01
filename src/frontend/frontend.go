@@ -24,7 +24,7 @@ func process() {
 	// mult_resp, err := response.(MathsResponse)
 }
 
-func RootServer(w http.ResponseWriter, req *http.Request) {
+func AssetsServer(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "<html><head><title>Asset List</title></head><body>")
 
 	asset_consumer, err := soar.NewConsumer(":1234")
@@ -32,7 +32,7 @@ func RootServer(w http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 
-	response, err := asset_consumer.Invoke("method", nil)
+	response, err := asset_consumer.Invoke("method", "first arg", 2)
 	if err != nil {
 		panic(err)
 	}
@@ -43,10 +43,11 @@ func RootServer(w http.ResponseWriter, req *http.Request) {
 	}
 
 	io.WriteString(w, response_string)
+	io.WriteString(w, "</body></html>")
 }
 
 func main() {
-	http.HandleFunc("/", RootServer)
+	http.HandleFunc("/assets", AssetsServer)
 
 	println("Starting Server on :12345")
 	err := http.ListenAndServe(":12345", nil)

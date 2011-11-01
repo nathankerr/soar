@@ -1,6 +1,7 @@
 package soar
 
 import (
+	"fmt"
 	"jsoncoder"
 	"net"
 	"os"
@@ -42,8 +43,9 @@ func (server *Server) Serve() os.Error {
 		}
 		server.coder.SetReadWriter(c)
 
-		var msg string
-		server.coder.Decode(&msg)
+		var invocation InvocationMessage
+		server.coder.Decode(&invocation)
+		fmt.Printf("%#v\n", invocation)
 
 		server.coder.Encode("pong")
 
