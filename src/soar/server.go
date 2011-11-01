@@ -1,7 +1,6 @@
 package soar
 
 import (
-	"fmt"
 	"jsoncoder"
 	"net"
 	"os"
@@ -62,16 +61,23 @@ func (server *Server) Serve() os.Error {
 }
 
 func (server *Server) call(request Request) (*Response) {
-	response := new(Response)
 	service := reflect.ValueOf(server.service)
 	capability := service.MethodByName(request.Capability)
 	if !capability.IsValid() {
-		response.Err = os.NewError("Capability \"" + request.Capability + "\" not supported.")
-		response.Returns = []interface{}{"error"}
-		return response
+		panic("Capability not found")
 	}
-	fmt.Printf("%#v\n",capability)
-	response.Returns = []interface{}{"pong"}
+
+	args := make([]reflect.Value, len(request.Args))
+	for k, v := range(request.Args) {
+		args[k] = reflect.ValueOf(v)
+	}
+
+	returns := capability.Call(args)
+
+	response := &Response{Returns: make([]interface{}, len(returns))}
+	for k, v := range(returns) {
+		response.Returns[k] = v.Interface()
+	}
 
 	return response
 }
