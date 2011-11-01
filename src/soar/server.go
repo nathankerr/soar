@@ -5,21 +5,24 @@ import (
 	"jsoncoder"
 	"net"
 	"os"
+	"reflect"
 )
 
 type Server struct {
 	addr string
 	listener net.Listener
 	coder Coder
+	service interface{} // varible representing the service and its capabilities
 }
 
-func NewServer(addr string) (*Server, os.Error) {
+func NewServer(addr string, service interface{}) (*Server, os.Error) {
 	coder := jsoncoder.NewCoder()
-	return NewServerWithCoder(addr, coder)
+	return NewServerWithCoder(addr, service, coder)
 }
 
-func NewServerWithCoder(addr string, coder Coder) (server *Server, err os.Error) {
+func NewServerWithCoder(addr string, service interface{}, coder Coder) (server *Server, err os.Error) {
 	server = &Server{ addr: addr,
+		service: service,
 		coder: coder,
 	}
 
@@ -43,14 +46,32 @@ func (server *Server) Serve() os.Error {
 		}
 		server.coder.SetReadWriter(c)
 
-		var invocation InvocationMessage
-		server.coder.Decode(&invocation)
-		fmt.Printf("%#v\n", invocation)
+		var request Request
+		server.coder.Decode(&request)
+		
+		response := server.call(request)
+		// response := new(Response)
+		// response.Returns = []interface{}{"pong"}
 
-		server.coder.Encode("pong")
+		server.coder.Encode(response)
 
 		c.Close()
 	}
 
 	return nil
+}
+
+func (server *Server) call(request Request) (*Response) {
+	response := new(Response)
+	service := reflect.ValueOf(server.service)
+	capability := service.MethodByName(request.Capability)
+	if !capability.IsValid() {
+		response.Err = os.NewError("Capability \"" + request.Capability + "\" not supported.")
+		response.Returns = []interface{}{"error"}
+		return response
+	}
+	fmt.Printf("%#v\n",capability)
+	response.Returns = []interface{}{"pong"}
+
+	return response
 }

@@ -11,7 +11,12 @@ type Coder interface {
 	Decode(v interface{}) os.Error
 }
 
-type InvocationMessage struct {
+type Request struct {
 	Capability string
 	Args []interface{}
+}
+
+type Response struct {
+	Err os.Error
+	Returns []interface{}
 }

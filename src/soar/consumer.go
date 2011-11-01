@@ -36,14 +36,20 @@ func (consumer *Consumer) Close() {
 	consumer.connection.Close()
 }
 
-func (consumer *Consumer) Invoke (capability string, args ...interface{}) (interface{}, os.Error) {
-	invocation := &InvocationMessage{ Capability: capability,
+func (consumer *Consumer) Invoke (capability string, args ...interface{}) (returns []interface{}, err os.Error) {
+	request := &Request{ Capability: capability,
 		Args: args,
 	}
-	consumer.coder.Encode(invocation)
+	err = consumer.coder.Encode(request)
+	if err != nil {
+		return nil, err
+	}
 
-	var msg string
-	consumer.coder.Decode(&msg)
+	var response Response
+	err = consumer.coder.Decode(&response)
+	if err != nil {
+		return nil, err
+	}
 
-	return msg, nil
+	return response.Returns, response.Err
 }
