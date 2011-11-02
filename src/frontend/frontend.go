@@ -17,7 +17,7 @@ func AssetsServer(w http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 
-	returns, err := asset_consumer.Invoke("Ping", "first arg", 2)
+	returns, err := asset_consumer.Invoke("Ping", "first arg")
 	if err != nil {
 		panic(err)
 	}
