@@ -1,7 +1,7 @@
 package soar
 
 import (
-	"jsoncoder"
+	"gobcoder"
 	"net"
 	"os"
 )
@@ -13,7 +13,7 @@ type Consumer struct {
 }
 
 func NewConsumer(addr string) (*Consumer, os.Error) {
-	coder := jsoncoder.NewCoder()
+	coder := gobcoder.NewCoder()
 	return NewConsumerWithCoder(addr, coder)
 }
 

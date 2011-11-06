@@ -1,7 +1,7 @@
 package soar
 
 import (
-	"jsoncoder"
+	"gobcoder"
 	"net"
 	"os"
 	"reflect"
@@ -15,7 +15,7 @@ type Server struct {
 }
 
 func NewServer(addr string, service interface{}) (*Server, os.Error) {
-	coder := jsoncoder.NewCoder()
+	coder := gobcoder.NewCoder()
 	return NewServerWithCoder(addr, service, coder)
 }
 
