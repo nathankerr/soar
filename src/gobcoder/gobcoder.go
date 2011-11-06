@@ -11,7 +11,7 @@ type Coder struct {
 	dec *gob.Decoder
 }
 
-func NewCoder() (*Coder) {
+func NewCoder() *Coder {
 	coder := &Coder{}
 
 	return coder

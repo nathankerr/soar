@@ -7,8 +7,8 @@ import (
 
 type Service int
 
-func (s *Service) Ping(msg string) string {
-	return "pong"
+func (s *Service) Echo(msg string) string {
+	return msg
 }
 
 func main() {

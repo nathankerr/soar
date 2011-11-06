@@ -13,10 +13,10 @@ type Coder interface {
 
 type Request struct {
 	Capability string
-	Args []interface{}
+	Args       []interface{}
 }
 
 type Response struct {
-	Err os.Error
+	Err     os.Error
 	Returns []interface{}
 }
