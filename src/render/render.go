@@ -1,8 +1,7 @@
 package main
 
-import (
-)
+import ()
 
 func main() {
-	println("renderer.main()")	
+	println("renderer.main()")
 }

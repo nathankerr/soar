@@ -1,7 +1,6 @@
 package main
 
 import (
-	"gobcoder"
 	"http"
 	"io"
 	"log"
@@ -11,13 +10,12 @@ import (
 func AssetsServer(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "<html><head><title>Asset List</title></head><body>")
 
-	coder := gobcoder.NewCoder()
-	asset_consumer, err := soar.NewConsumerWithCoder(":1234", coder)
+	asset_consumer, err := soar.NewConsumer(":1234")
 	if err != nil {
 		panic(err)
 	}
 
-	returns, err := asset_consumer.Invoke("Ping", "first arg")
+	returns, err := asset_consumer.Invoke("Echo", "first arg")
 	if err != nil {
 		panic(err)
 	}

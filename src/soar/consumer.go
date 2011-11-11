@@ -1,24 +1,24 @@
 package soar
 
 import (
-	"jsoncoder"
+	"gobcoder"
 	"net"
 	"os"
 )
 
 type Consumer struct {
-	addr string
+	addr       string
 	connection net.Conn
-	coder Coder
+	coder      Coder
 }
 
 func NewConsumer(addr string) (*Consumer, os.Error) {
-	coder := jsoncoder.NewCoder()
+	coder := gobcoder.NewCoder()
 	return NewConsumerWithCoder(addr, coder)
 }
 
 func NewConsumerWithCoder(addr string, coder Coder) (consumer *Consumer, err os.Error) {
-	consumer = &Consumer{ addr: addr,
+	consumer = &Consumer{addr: addr,
 		coder: coder,
 	}
 
@@ -28,7 +28,7 @@ func NewConsumerWithCoder(addr string, coder Coder) (consumer *Consumer, err os.
 	}
 
 	consumer.coder.SetReadWriter(consumer.connection)
-	
+
 	return consumer, nil
 }
 
@@ -36,8 +36,8 @@ func (consumer *Consumer) Close() {
 	consumer.connection.Close()
 }
 
-func (consumer *Consumer) Invoke (capability string, args ...interface{}) (returns []interface{}, err os.Error) {
-	request := &Request{ Capability: capability,
+func (consumer *Consumer) Invoke(capability string, args ...interface{}) (returns []interface{}, err os.Error) {
+	request := &Request{Capability: capability,
 		Args: args,
 	}
 	err = consumer.coder.Encode(request)

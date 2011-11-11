@@ -1,21 +1,19 @@
 package main
 
 import (
-	"gobcoder"
 	"log"
 	"soar"
 )
 
 type Service int
 
-func (s *Service) Ping(msg string) string {
-	return "pong"
+func (s *Service) Echo(msg string) string {
+	return msg + ", would you like fries with that?"
 }
 
 func main() {
 	service := new(Service)
-	coder := gobcoder.NewCoder()
-	server, err := soar.NewServerWithCoder(":1234", service, coder)
+	server, err := soar.NewServer(":1234", service)
 	if err != nil {
 		panic(err)
 	}

@@ -1,28 +1,28 @@
 package soar
 
 import (
-	"jsoncoder"
+	"gobcoder"
 	"net"
 	"os"
 	"reflect"
 )
 
 type Server struct {
-	addr string
+	addr     string
 	listener net.Listener
-	coder Coder
-	service interface{} // varible representing the service and its capabilities
+	coder    Coder
+	service  interface{} // varible representing the service and its capabilities
 }
 
 func NewServer(addr string, service interface{}) (*Server, os.Error) {
-	coder := jsoncoder.NewCoder()
+	coder := gobcoder.NewCoder()
 	return NewServerWithCoder(addr, service, coder)
 }
 
 func NewServerWithCoder(addr string, service interface{}, coder Coder) (server *Server, err os.Error) {
-	server = &Server{ addr: addr,
+	server = &Server{addr: addr,
 		service: service,
-		coder: coder,
+		coder:   coder,
 	}
 
 	server.listener, err = net.Listen("tcp", server.addr)
@@ -47,10 +47,8 @@ func (server *Server) Serve() os.Error {
 
 		var request Request
 		server.coder.Decode(&request)
-		
+
 		response := server.call(request)
-		// response := new(Response)
-		// response.Returns = []interface{}{"pong"}
 
 		server.coder.Encode(response)
 
@@ -60,7 +58,7 @@ func (server *Server) Serve() os.Error {
 	return nil
 }
 
-func (server *Server) call(request Request) (*Response) {
+func (server *Server) call(request Request) *Response {
 	service := reflect.ValueOf(server.service)
 	capability := service.MethodByName(request.Capability)
 	if !capability.IsValid() {
@@ -68,14 +66,14 @@ func (server *Server) call(request Request) (*Response) {
 	}
 
 	args := make([]reflect.Value, len(request.Args))
-	for k, v := range(request.Args) {
+	for k, v := range request.Args {
 		args[k] = reflect.ValueOf(v)
 	}
 
 	returns := capability.Call(args)
 
 	response := &Response{Returns: make([]interface{}, len(returns))}
-	for k, v := range(returns) {
+	for k, v := range returns {
 		response.Returns[k] = v.Interface()
 	}
 
