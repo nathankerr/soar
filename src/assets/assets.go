@@ -5,15 +5,15 @@ import (
 	"soar"
 )
 
-type Service int
+type Assets int
 
-func (s *Service) Echo(msg string) string {
+func (s *Assets) Echo(msg string) string {
 	return msg + ", would you like fries with that?"
 }
 
 func main() {
-	service := new(Service)
-	server, err := soar.NewServer(":1234", service)
+	assets := new(Assets)
+	server, err := soar.NewServer(":1234", assets)
 	if err != nil {
 		panic(err)
 	}
