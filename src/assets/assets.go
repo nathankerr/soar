@@ -2,21 +2,28 @@ package main
 
 import (
 	"path/filepath"
+	"io/ioutil"
 	"log"
 	"soar"
 	"os"
 )
 
-type Assets int
+type Assets struct {
+	path string
+}
 
-func (s *Assets) List() []string {
+func NewAssets() *Assets {
 	path, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}
 	path = filepath.Join(path, "assets")
 
-	dir, err := os.Open(path)
+	return &Assets{path: path}
+}
+
+func (a *Assets) List() []string {
+	dir, err := os.Open(a.path)
 	if err != nil {
 		panic(err)
 	}
@@ -29,8 +36,23 @@ func (s *Assets) List() []string {
 	return names
 }
 
+func (a *Assets) Get(filename string) []byte {
+	path := filepath.Join(a.path, filename)
+	file, err := os.Open(path)
+	if err != nil {
+		panic(err)
+	}
+
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		panic(err)
+	}
+
+	return data
+}
+
 func main() {
-	assets := new(Assets)
+	assets := NewAssets()
 	server, err := soar.NewServer(":1234", assets)
 	if err != nil {
 		panic(err)

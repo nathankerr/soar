@@ -8,7 +8,22 @@ import (
 type Render int
 
 func (r *Render) Render(filename string) []byte {
-	return []byte("hello from render! " + filename)
+	assets_consumer, err := soar.NewConsumer(":1234")
+	if err != nil {
+		panic(err)
+	}
+
+	returns, err := assets_consumer.Invoke("Get", filename)
+	if err != nil {
+		panic(err)
+	}
+
+	data, ok := returns[0].([]byte)
+	if !ok {
+		panic("could not recast assets return")
+	}
+
+	return data
 }
 
 func main() {
