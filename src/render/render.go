@@ -38,7 +38,7 @@ func (r *Render) Render(filename string) []byte {
 	pdf_out := filepath.Join(tmpdir, "input.pdf")
 	xelatex := exec.Command("xelatex",
 		//"-o", pdf_out,
-		"-output-directory=" + tmpdir,
+		"-output-directory="+tmpdir,
 		input_file,
 	)
 	xelatex.Stdout = os.Stdout

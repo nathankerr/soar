@@ -8,10 +8,6 @@ import (
 	"soar"
 )
 
-func AssetsListServer(w http.ResponseWriter, req *http.Request) {
-
-}
-
 func AssetsServer(w http.ResponseWriter, req *http.Request) {
 	_, filename := path.Split(req.URL.Path)
 
@@ -35,11 +31,11 @@ func AssetsServer(w http.ResponseWriter, req *http.Request) {
 		}
 
 		for _, file := range files {
-			io.WriteString(w, "<a href=\"/assets/" + file + "\">" + file + "</a> ")
-			io.WriteString(w, "<a href=\"/render/" + file + "\">(as pdf)</a>")
+			io.WriteString(w, "<a href=\"/assets/"+file+"\">"+file+"</a> ")
+			io.WriteString(w, "<a href=\"/render/"+file+"\">(as pdf)</a>")
 			io.WriteString(w, "<br/>")
 		}
-		
+
 		io.WriteString(w, "</body></html>")
 	} else {
 		// Show contents of a file
