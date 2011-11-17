@@ -15,17 +15,20 @@ func AssetsServer(w http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 
-	returns, err := asset_consumer.Invoke("Echo", "first arg")
+	returns, err := asset_consumer.Invoke("List")
 	if err != nil {
 		panic(err)
 	}
 
-	response_string, ok := returns[0].(string)
+	files, ok := returns[0].([]string)
 	if !ok {
 		panic("cannot recast response")
 	}
 
-	io.WriteString(w, response_string)
+	for _, file := range files {
+		io.WriteString(w, "<a href=\"/render/" + file + "\">" + file + "</a><br/>")
+	}
+	
 	io.WriteString(w, "</body></html>")
 }
 
