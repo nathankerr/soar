@@ -4,6 +4,7 @@ import (
 	"http"
 	"io"
 	"log"
+	"path"
 	"soar"
 )
 
@@ -22,7 +23,7 @@ func AssetsServer(w http.ResponseWriter, req *http.Request) {
 
 	files, ok := returns[0].([]string)
 	if !ok {
-		panic("cannot recast response")
+		panic("cannot recast asset response")
 	}
 
 	for _, file := range files {
@@ -32,8 +33,30 @@ func AssetsServer(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "</body></html>")
 }
 
+func RenderServer(w http.ResponseWriter, req *http.Request) {
+	_, filename := path.Split(req.URL.Path)
+
+	render_consumer, err := soar.NewConsumer(":1233")
+	if err != nil {
+		panic(err)
+	}
+
+	returns, err := render_consumer.Invoke("Render", filename)
+	if err != nil {
+		panic(err)
+	}
+
+	data, ok := returns[0].([]byte)
+	if !ok {
+		panic("cannot recast render response")
+	}
+
+	w.Write(data)
+}
+
 func main() {
 	http.HandleFunc("/assets", AssetsServer)
+	http.HandleFunc("/render/", RenderServer)
 
 	println("Starting Server on :12345")
 	err := http.ListenAndServe(":12345", nil)
