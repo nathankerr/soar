@@ -8,29 +8,53 @@ import (
 	"soar"
 )
 
+func AssetsListServer(w http.ResponseWriter, req *http.Request) {
+
+}
+
 func AssetsServer(w http.ResponseWriter, req *http.Request) {
-	io.WriteString(w, "<html><head><title>Asset List</title></head><body>")
+	_, filename := path.Split(req.URL.Path)
 
 	asset_consumer, err := soar.NewConsumer(":1234")
 	if err != nil {
 		panic(err)
 	}
 
-	returns, err := asset_consumer.Invoke("List")
-	if err != nil {
-		panic(err)
-	}
+	if filename == "" {
+		// List files
+		io.WriteString(w, "<html><head><title>Asset List</title></head><body>")
 
-	files, ok := returns[0].([]string)
-	if !ok {
-		panic("cannot recast asset response")
-	}
+		returns, err := asset_consumer.Invoke("List")
+		if err != nil {
+			panic(err)
+		}
 
-	for _, file := range files {
-		io.WriteString(w, "<a href=\"/render/" + file + "\">" + file + "</a><br/>")
+		files, ok := returns[0].([]string)
+		if !ok {
+			panic("cannot recast asset response")
+		}
+
+		for _, file := range files {
+			io.WriteString(w, "<a href=\"/assets/" + file + "\">" + file + "</a> ")
+			io.WriteString(w, "<a href=\"/render/" + file + "\">(as pdf)</a>")
+			io.WriteString(w, "<br/>")
+		}
+		
+		io.WriteString(w, "</body></html>")
+	} else {
+		// Show contents of a file
+		returns, err := asset_consumer.Invoke("Get", filename)
+		if err != nil {
+			panic(err)
+		}
+
+		data, ok := returns[0].([]byte)
+		if !ok {
+			panic("cannot recast assets response")
+		}
+
+		w.Write(data)
 	}
-	
-	io.WriteString(w, "</body></html>")
 }
 
 func RenderServer(w http.ResponseWriter, req *http.Request) {
@@ -55,7 +79,7 @@ func RenderServer(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/assets", AssetsServer)
+	http.HandleFunc("/assets/", AssetsServer)
 	http.HandleFunc("/render/", RenderServer)
 
 	println("Starting Server on :12345")
