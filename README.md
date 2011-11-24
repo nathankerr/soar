@@ -1,4 +1,4 @@
-#The SOA Research Platform (SOAR)
+# The SOA Research Platform (SOAR)
 
 1. SOA Complete: Prove benefits and capabilities from a minimal basis.
 2. Extensions: Increase ease of use and efficiency by coordination, etc.
@@ -6,6 +6,8 @@
 4. Execution: Improve execution environment by working on QoS, QoE, reliability, dependability, scalability, etc.
 
 The point here is *not* to make a platform to build production-level SOAs, but to create a platform which can be leveraged to try new ideas.
+
+This software is developed by a member of the [ICSY](http://www.icsy.de) research group.
 
 ## Building
     export GOPATH=/path/to/checkout
