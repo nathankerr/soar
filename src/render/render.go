@@ -1,7 +1,7 @@
 package main
 
 import (
-	"exec"
+	"os/exec"
 	"path/filepath"
 	"io/ioutil"
 	"log"

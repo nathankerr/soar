@@ -1,9 +1,9 @@
 package main
 
 import (
-	"http"
 	"io"
 	"log"
+	"net/http"
 	"path"
 	"soar"
 )
@@ -81,6 +81,6 @@ func main() {
 	println("Starting Server on :12345")
 	err := http.ListenAndServe(":12345", nil)
 	if err != nil {
-		log.Fatal("ListenAndServe: ", err.String())
+		log.Fatal("ListenAndServe: ", err.Error())
 	}
 }

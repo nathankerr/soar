@@ -3,7 +3,6 @@ package soar
 import (
 	"gobcoder"
 	"net"
-	"os"
 )
 
 type Consumer struct {
@@ -12,12 +11,12 @@ type Consumer struct {
 	coder      Coder
 }
 
-func NewConsumer(addr string) (*Consumer, os.Error) {
+func NewConsumer(addr string) (*Consumer, error) {
 	coder := gobcoder.NewCoder()
 	return NewConsumerWithCoder(addr, coder)
 }
 
-func NewConsumerWithCoder(addr string, coder Coder) (consumer *Consumer, err os.Error) {
+func NewConsumerWithCoder(addr string, coder Coder) (consumer *Consumer, err error) {
 	consumer = &Consumer{addr: addr,
 		coder: coder,
 	}
@@ -36,7 +35,7 @@ func (consumer *Consumer) Close() {
 	consumer.connection.Close()
 }
 
-func (consumer *Consumer) Invoke(capability string, args ...interface{}) (returns []interface{}, err os.Error) {
+func (consumer *Consumer) Invoke(capability string, args ...interface{}) (returns []interface{}, err error) {
 	request := &Request{Capability: capability,
 		Args: args,
 	}

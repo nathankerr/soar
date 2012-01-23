@@ -3,7 +3,6 @@ package soar
 import (
 	"gobcoder"
 	"net"
-	"os"
 	"reflect"
 )
 
@@ -14,12 +13,12 @@ type Server struct {
 	service  interface{} // varible representing the service and its capabilities
 }
 
-func NewServer(addr string, service interface{}) (*Server, os.Error) {
+func NewServer(addr string, service interface{}) (*Server, error) {
 	coder := gobcoder.NewCoder()
 	return NewServerWithCoder(addr, service, coder)
 }
 
-func NewServerWithCoder(addr string, service interface{}, coder Coder) (server *Server, err os.Error) {
+func NewServerWithCoder(addr string, service interface{}, coder Coder) (server *Server, err error) {
 	server = &Server{addr: addr,
 		service: service,
 		coder:   coder,
@@ -37,7 +36,7 @@ func (server *Server) Close() {
 	server.listener.Close()
 }
 
-func (server *Server) Serve() os.Error {
+func (server *Server) Serve() error {
 	for {
 		c, err := server.listener.Accept()
 		if err != nil {
