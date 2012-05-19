@@ -1,18 +1,18 @@
 package main
 
 import (
-	"os/exec"
-	"path/filepath"
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"soar"
 )
 
 type Render int
 
 func (r *Render) Render(filename string) []byte {
-	assets_consumer, err := soar.NewConsumer(":1234")
+	assets_client, err := soar.NewClient(":1234")
 	if err != nil {
 		panic(err)
 	}
@@ -22,7 +22,7 @@ func (r *Render) Render(filename string) []byte {
 		panic(err)
 	}
 
-	returns, err := assets_consumer.Invoke("Get", filename)
+	returns, err := assets_client.Invoke("Get", filename)
 	if err != nil {
 		panic(err)
 	}

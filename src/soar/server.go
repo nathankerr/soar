@@ -10,7 +10,7 @@ type Server struct {
 	addr     string
 	listener net.Listener
 	coder    Coder
-	service  interface{} // varible representing the service and its capabilities
+	service  interface{} // variable representing the service and its capabilities
 }
 
 func NewServer(addr string, service interface{}) (*Server, error) {

@@ -11,7 +11,7 @@ import (
 func AssetsServer(w http.ResponseWriter, req *http.Request) {
 	_, filename := path.Split(req.URL.Path)
 
-	asset_consumer, err := soar.NewConsumer(":1234")
+	assets_client, err := soar.NewClient(":1234")
 	if err != nil {
 		panic(err)
 	}
@@ -20,7 +20,7 @@ func AssetsServer(w http.ResponseWriter, req *http.Request) {
 		// List files
 		io.WriteString(w, "<html><head><title>Asset List</title></head><body>")
 
-		returns, err := asset_consumer.Invoke("List")
+		returns, err := assets_client.Invoke("List")
 		if err != nil {
 			panic(err)
 		}
@@ -39,7 +39,7 @@ func AssetsServer(w http.ResponseWriter, req *http.Request) {
 		io.WriteString(w, "</body></html>")
 	} else {
 		// Show contents of a file
-		returns, err := asset_consumer.Invoke("Get", filename)
+		returns, err := assets_client.Invoke("Get", filename)
 		if err != nil {
 			panic(err)
 		}
@@ -56,12 +56,12 @@ func AssetsServer(w http.ResponseWriter, req *http.Request) {
 func RenderServer(w http.ResponseWriter, req *http.Request) {
 	_, filename := path.Split(req.URL.Path)
 
-	render_consumer, err := soar.NewConsumer(":1233")
+	render_client, err := soar.NewClient(":1233")
 	if err != nil {
 		panic(err)
 	}
 
-	returns, err := render_consumer.Invoke("Render", filename)
+	returns, err := render_client.Invoke("Render", filename)
 	if err != nil {
 		panic(err)
 	}

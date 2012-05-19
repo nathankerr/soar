@@ -1,11 +1,11 @@
 package main
 
 import (
-	"path/filepath"
 	"io/ioutil"
 	"log"
-	"soar"
 	"os"
+	"path/filepath"
+	"soar"
 )
 
 type Assets struct {
