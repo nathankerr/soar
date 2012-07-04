@@ -3,7 +3,6 @@ package jsoncoder
 import (
 	"io"
 	"json"
-	"os"
 )
 
 type Coder struct {
@@ -22,10 +21,10 @@ func (coder *Coder) SetReadWriter(rw io.ReadWriter) {
 	coder.dec = json.NewDecoder(rw)
 }
 
-func (coder *Coder) Encode(v interface{}) os.Error {
+func (coder *Coder) Encode(v interface{}) error {
 	return coder.enc.Encode(v)
 }
 
-func (coder *Coder) Decode(v interface{}) os.Error {
+func (coder *Coder) Decode(v interface{}) error {
 	return coder.dec.Decode(v)
 }
